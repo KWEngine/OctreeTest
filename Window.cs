@@ -18,6 +18,12 @@ namespace OctreeTest
         private List<Hitbox> _hitboxes = new List<Hitbox>();
         private Node _rootNode = new Node();
 
+        private float camCosX = 0;
+        private float camSinY = 0;
+        private float camDistance = 25;
+        private readonly float camSpeedStep = 0.01f;
+
+
         protected override void OnLoad()
         {
             base.OnLoad();
@@ -32,8 +38,9 @@ namespace OctreeTest
             GL.Enable(EnableCap.DepthTest);
             GL.CullFace(CullFaceMode.Back);
             GL.PointSize(8);
+            GL.LineWidth(2);
 
-            _viewMatrix = Matrix4.LookAt(10, 10, 10, 0, 0, 0, 0, 1, 0);
+            UpdateViewMatrix();
             GenerateHitboxes();
             
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
@@ -51,8 +58,17 @@ namespace OctreeTest
 
         }
 
+        private void UpdateViewMatrix()
+        {
+            camCosX = (camCosX + camSpeedStep) % ((float)Math.PI * 2);
+            camSinY = (camSinY + camSpeedStep) % ((float)Math.PI * 2);
+            _viewMatrix = Matrix4.LookAt((float)Math.Cos(camCosX) * camDistance, 25, (float)Math.Sin(camSinY) * camDistance, 0, 0, 0, 0, 1, 0);
+        }
+
         protected override void OnRenderFrame(FrameEventArgs args)
         {
+            UpdateViewMatrix();
+
             base.OnRenderFrame(args);
             _viewProjectionMatrix = _viewMatrix * _projectionMatrix;
 
@@ -60,7 +76,7 @@ namespace OctreeTest
             GL.UseProgram(RendererCubes.ProgramID);
             foreach (Hitbox h in _hitboxes)
             {
-                //RendererCubes.Draw(h, ref _viewProjectionMatrix);
+                RendererCubes.Draw(h, ref _viewProjectionMatrix);
             }
 
             GL.UseProgram(RendererNodes.ProgramID);

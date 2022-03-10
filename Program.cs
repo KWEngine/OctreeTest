@@ -5,7 +5,7 @@ GameWindowSettings gws = GameWindowSettings.Default;
 
 NativeWindowSettings nws = new NativeWindowSettings();
 nws.Flags = OpenTK.Windowing.Common.ContextFlags.Debug;
-nws.NumberOfSamples = 0; // FSAA
+nws.NumberOfSamples = 8;
 nws.Title = "Mein OpenGL-Projekt";
 nws.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Resizable;
 

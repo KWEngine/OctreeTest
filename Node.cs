@@ -9,7 +9,7 @@ namespace OctreeTest
 {
     class Node
     {
-        public float Length { get; private set; } = 25;
+        public float Length { get; private set; } = 10;
         public Vector3 Center { get; private set; } = Vector3.Zero;
 
         public List<Node> Children { get; private set; } = new List<Node>();

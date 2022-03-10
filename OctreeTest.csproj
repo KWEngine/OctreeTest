@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="renderercubes.frag" />
+    <None Remove="renderercubes.vert" />
+    <None Remove="renderernodes.frag" />
+    <None Remove="renderernodes.geom" />
+    <None Remove="renderernodes.vert" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="renderernodes.geom" />
+    <EmbeddedResource Include="renderernodes.frag" />
+    <EmbeddedResource Include="renderernodes.vert" />
+    <EmbeddedResource Include="renderercubes.frag" />
+    <EmbeddedResource Include="renderercubes.vert" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTK" Version="4.7.1" />
+  </ItemGroup>
+
+</Project>

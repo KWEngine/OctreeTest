@@ -9,6 +9,11 @@ namespace OctreeTest
 {
     class Node
     {
+        public static void ResetColors()
+        {
+            Counter = 0;
+        }
+
         private static readonly Vector3[] COLORS = new Vector3[] {
             new Vector3(0, 0, 1),
             new Vector3(1, 0, 0),
@@ -20,7 +25,7 @@ namespace OctreeTest
             new Vector3(0.5f, 0.5f, 0.5f),
             new Vector3(0.25f, 0.75f, 0.5f)
         };
-        private static readonly int MaxHitboxes = 4;
+        private static readonly int MaxHitboxCount = 1;
         private static int Counter = 0;
         public Vector3 Scale { get; private set; } = new Vector3(1, 1, 1);
         public Vector3 Center { get; private set; } = Vector3.Zero;
@@ -39,24 +44,24 @@ namespace OctreeTest
 
         public bool AddHitbox(Hitbox h)
         {
-            if(Hitboxes.Count == MaxHitboxes && ChildNodes.Count == 0)
+            bool result = false;
+            // If it has child nodes already, place the new hitbox
+            // center point in one of those child nodes:
+            if(ChildNodes.Count != 0)
             {
-                Subdivide();
-                bool result;
                 foreach (Node n in ChildNodes)
                 {
                     result = n.AddHitbox(h);
                     if (result)
                         return true;
                 }
-                throw new Exception("Could not place hitbox center into a node.");
             }
             else
             {
-                if(Hitboxes.Count < MaxHitboxes)
-                {
-
-                }
+                // If it has no child nodes yet,
+                // check if the hitbox center point is inside
+                // the region and if it is, decide whether
+                // to subdivide or to just store it:
                 float top = Center.Y + Scale.Y;
                 float bottom = Center.Y - Scale.Y;
                 float left = Center.X - Scale.X;
@@ -69,14 +74,20 @@ namespace OctreeTest
                     && hitboxCenter.Y >= bottom && hitboxCenter.Y <= top
                     && hitboxCenter.Z >= back && hitboxCenter.Z <= front)
                 {
-                    Hitboxes.Add(h);
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    // Do we need to subdivide?
+                    if (Hitboxes.Count >= MaxHitboxCount && Scale.X >= 2 && Scale.Y >= 2 && Scale.Z >= 2)
+                    {
+                        Subdivide();
+                        return AddHitbox(h);
+                    }
+                    else
+                    {   // if not, just store it:
+                        Hitboxes.Add(h);
+                        return true;
+                    }
                 }
             }
+           
             return false;
         }
 

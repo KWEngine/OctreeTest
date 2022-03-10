@@ -7,6 +7,7 @@ using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace OctreeTest
 {
@@ -19,11 +20,13 @@ namespace OctreeTest
         private Matrix4 _viewProjectionMatrix = Matrix4.Identity;
         private List<Hitbox> _hitboxes = new List<Hitbox>();
         private Node _rootNode = new Node(_worldScale, Vector3.Zero);
+        private double _timeLastUpdated = 0;
+        private double _timeElapsed = 0;
 
         private float camCosX = 0;
         private float camSinY = 0;
-        private float camDistance = 250;
-        private readonly float camSpeedStep = 0.00001f;
+        private float camDistance = 200;
+        private readonly float camSpeedStep = 0.005f;
 
 
         protected override void OnLoad()
@@ -54,26 +57,45 @@ namespace OctreeTest
 
         private void GenerateHitboxes()
         {
+            _hitboxes.Clear();
             Random r = new Random();
-            //_rootNode.Subdivide();
-            for (int i = 0; i < 25; i++)
+            
+            for (int i = 0; i < 100; i++)
             {
-                int pX = r.Next((int)-_worldScale.X / 2, (int)_worldScale.X / 2);
-                int pY = r.Next((int)-_worldScale.X / 2, (int)_worldScale.X / 2);
-                int pZ = r.Next((int)-_worldScale.X / 2, (int)_worldScale.X / 2);
+                int pX = r.Next((int)-_worldScale.X , (int)_worldScale.X);
+                int pY = r.Next((int)-_worldScale.X, (int)_worldScale.X);
+                int pZ = r.Next((int)-_worldScale.X, (int)_worldScale.X);
 
-                Hitbox htest01 = new Hitbox(new Vector3(pX, pY, pZ));
+                Hitbox htest01 = new Hitbox(new Vector3(pX, pY, pZ), new Vector3(2,2,2));
                 _hitboxes.Add(htest01);
-                _rootNode.AddHitbox(htest01);
             }
             
+            //GenerateOctree();
+        }
 
+        private void GenerateOctree()
+        {
+            Node.ResetColors();
+            _rootNode = new Node(_worldScale, Vector3.Zero);
+            foreach(Hitbox h in _hitboxes)
+            {
+                _rootNode.AddHitbox(h);
+            }
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
-
+            _timeElapsed += args.Time;
+            if(KeyboardState.IsKeyDown(Keys.F1))
+            {
+                if (_timeElapsed - _timeLastUpdated >= 0.5)
+                {
+                    GenerateHitboxes();
+                    _timeLastUpdated = _timeElapsed;
+                }
+            }
+            GenerateOctree();
         }
 
         private void UpdateViewMatrix()

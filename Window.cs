@@ -12,16 +12,18 @@ namespace OctreeTest
 {
     class Window : GameWindow
     {
+        private static readonly Vector3 _worldScale = new Vector3(50, 50, 50);
+
         private Matrix4 _viewMatrix = Matrix4.Identity;
         private Matrix4 _projectionMatrix = Matrix4.Identity;
         private Matrix4 _viewProjectionMatrix = Matrix4.Identity;
         private List<Hitbox> _hitboxes = new List<Hitbox>();
-        private Node _rootNode = new Node();
+        private Node _rootNode = new Node(_worldScale, Vector3.Zero);
 
         private float camCosX = 0;
         private float camSinY = 0;
-        private float camDistance = 25;
-        private readonly float camSpeedStep = 0.01f;
+        private float camDistance = 250;
+        private readonly float camSpeedStep = 0.00001f;
 
 
         protected override void OnLoad()
@@ -36,12 +38,15 @@ namespace OctreeTest
 
             GL.ClearColor(1, 1, 1, 1);
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
             GL.CullFace(CullFaceMode.Back);
-            GL.PointSize(8);
-            GL.LineWidth(2);
+            GL.FrontFace(FrontFaceDirection.Ccw);
+            GL.PointSize(4);
+            GL.LineWidth(4);
 
             UpdateViewMatrix();
             GenerateHitboxes();
+
             
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
            
@@ -49,7 +54,20 @@ namespace OctreeTest
 
         private void GenerateHitboxes()
         {
-            _hitboxes.Add(new Hitbox());
+            Random r = new Random();
+            //_rootNode.Subdivide();
+            for (int i = 0; i < 25; i++)
+            {
+                int pX = r.Next((int)-_worldScale.X / 2, (int)_worldScale.X / 2);
+                int pY = r.Next((int)-_worldScale.X / 2, (int)_worldScale.X / 2);
+                int pZ = r.Next((int)-_worldScale.X / 2, (int)_worldScale.X / 2);
+
+                Hitbox htest01 = new Hitbox(new Vector3(pX, pY, pZ));
+                _hitboxes.Add(htest01);
+                _rootNode.AddHitbox(htest01);
+            }
+            
+
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -60,9 +78,12 @@ namespace OctreeTest
 
         private void UpdateViewMatrix()
         {
+            
             camCosX = (camCosX + camSpeedStep) % ((float)Math.PI * 2);
             camSinY = (camSinY + camSpeedStep) % ((float)Math.PI * 2);
-            _viewMatrix = Matrix4.LookAt((float)Math.Cos(camCosX) * camDistance, 25, (float)Math.Sin(camSinY) * camDistance, 0, 0, 0, 0, 1, 0);
+            _viewMatrix = Matrix4.LookAt((float)Math.Cos(camCosX) * camDistance, camDistance / 2, (float)Math.Sin(camSinY) * camDistance, 0, 0, 0, 0, 1, 0);
+            
+            //_viewMatrix = Matrix4.LookAt(0, camDistance, camDistance, 0, 0, 0, 0, 1, 0);
         }
 
         protected override void OnRenderFrame(FrameEventArgs args)

@@ -10,5 +10,6 @@ nws.Title = "Mein OpenGL-Projekt";
 nws.WindowBorder = OpenTK.Windowing.Common.WindowBorder.Resizable;
 
 Window w = new Window(gws, nws);
+w.VSync = OpenTK.Windowing.Common.VSyncMode.On;
 w.Run();
 w.Dispose();

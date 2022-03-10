@@ -3,76 +3,78 @@
 layout(points) in;
 layout(line_strip, max_vertices = 20) out;
 
-uniform float uRadius;
+uniform vec3 uRadius;
 uniform mat4 uViewProjectionMatrix;
+
+const float factor = 0.95;
 
 void main()
 {
     // front
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, uRadius, uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, uRadius.y * factor, uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius, uRadius, uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius.x * factor, uRadius.y * factor, uRadius.z * factor, 0.0));
     EmitVertex();
     
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius, -uRadius, uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius.x * factor, -uRadius.y * factor, uRadius.z * factor, 0.0));
     EmitVertex();
     
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, -uRadius, uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, -uRadius.y * factor, uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, uRadius, uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, uRadius.y * factor, uRadius.z * factor, 0.0));
     EmitVertex();
     EndPrimitive();
 
     // back
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, uRadius, -uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, uRadius.y * factor, -uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, -uRadius, -uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, -uRadius.y * factor, -uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius, -uRadius, -uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius.x * factor, -uRadius.y * factor, -uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius, uRadius, -uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius.x * factor, uRadius.y * factor, -uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, uRadius, -uRadius, 0.0));
-    EmitVertex();
-    EndPrimitive();
-
-    // left
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius, uRadius, -uRadius, 0.0));
-    EmitVertex();
-
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius, -uRadius, -uRadius, 0.0));
-    EmitVertex();
-
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius, -uRadius, uRadius, 0.0));
-    EmitVertex();
-
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius, uRadius, uRadius, 0.0));
-    EmitVertex();
-
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius, uRadius, -uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, uRadius.y * factor, -uRadius.z * factor, 0.0));
     EmitVertex();
     EndPrimitive();
 
     // left
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, uRadius, -uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius.x * factor, uRadius.y * factor, -uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, -uRadius, -uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius.x * factor, -uRadius.y * factor, -uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, -uRadius, uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius.x * factor, -uRadius.y * factor, uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, uRadius, uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius.x * factor, uRadius.y * factor, uRadius.z * factor, 0.0));
     EmitVertex();
 
-    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius, uRadius, -uRadius, 0.0));
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(-uRadius.x * factor, uRadius.y * factor, -uRadius.z * factor, 0.0));
+    EmitVertex();
+    EndPrimitive();
+
+    // left
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, uRadius.y * factor, -uRadius.z * factor, 0.0));
+    EmitVertex();
+
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, -uRadius.y * factor, -uRadius.z * factor, 0.0));
+    EmitVertex();
+
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, -uRadius.y * factor, uRadius.z * factor, 0.0));
+    EmitVertex();
+
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, uRadius.y * factor, uRadius.z * factor, 0.0));
+    EmitVertex();
+
+    gl_Position = uViewProjectionMatrix * (gl_in[0].gl_Position + vec4(uRadius.x * factor, uRadius.y * factor, -uRadius.z * factor, 0.0));
     EmitVertex();
     EndPrimitive();
 }

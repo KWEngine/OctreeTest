@@ -20,6 +20,7 @@ namespace OctreeTest
         public static int UViewProjectionMatrix { get; private set; } = -1;
         public static int UCenter { get; private set; } = -1;
         public static int URadius { get; private set; } = -1;
+        public static int UColor { get; private set; } = -1;
 
         private static int LoadShader(Stream pFileStream, ShaderType pType, int pProgram)
         {
@@ -83,6 +84,7 @@ namespace OctreeTest
 
                 UCenter = GL.GetUniformLocation(ProgramID, "uCenter");
                 URadius = GL.GetUniformLocation(ProgramID, "uRadius");
+                UColor = GL.GetUniformLocation(ProgramID, "uColor");
                 UViewProjectionMatrix = GL.GetUniformLocation(ProgramID, "uViewProjectionMatrix");
             }
         }
@@ -90,15 +92,16 @@ namespace OctreeTest
         public static void Draw(Node n, ref Matrix4 vp)
         {
             GL.Uniform3(UCenter, n.Center);
-            GL.Uniform1(URadius, n.Length / 2f);
+            GL.Uniform3(URadius, n.Scale);
+            GL.Uniform3(UColor, n.Color);
             GL.BindVertexArray(VAO);
             GL.DrawArrays(PrimitiveType.Points, 0, 1); 
             GL.BindVertexArray(0);
             Helper.CheckGLErrors();
 
-            foreach(Node child in n.Children)
+            foreach(Node child in n.ChildNodes)
             {
-                Draw(n, ref vp);
+                Draw(child, ref vp);
             }
         }
     }
